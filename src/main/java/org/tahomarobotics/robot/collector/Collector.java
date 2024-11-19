@@ -1,5 +1,7 @@
 package org.tahomarobotics.robot.collector;
 
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import org.tahomarobotics.robot.RobotMap;
 import org.tahomarobotics.robot.util.SubsystemIF;
@@ -13,8 +15,13 @@ public class Collector extends SubsystemIF {
     private final TalonFX collectMotor = new TalonFX(RobotMap.COLLECTOR_MOTOR);
 
     // CONTROL REQUESTS
+    private final MotionMagicVoltage deployControl = new MotionMagicVoltage(CollectorConstants.STOW_POSITION);
+    private final MotionMagicVelocityVoltage collectControl = new MotionMagicVelocityVoltage(0);
 
     // STATUS SIGNALS
+    private DeploymentState deployStateStowed = DeploymentState.STOWED;
+    private DeploymentState deployStateDeployed = DeploymentState.DEPLOYED;
+    private CollectionState collectState = CollectionState.COLLECTING;
 
     // STATE
     private CollectionState collectionState = CollectionState.DISABLED;
@@ -22,7 +29,14 @@ public class Collector extends SubsystemIF {
 
     private Collector() {
 
+        deployLeft.getConfigurator().apply(CollectorConstants.deployMotorConfiguration);
+        deployRight.getConfigurator().apply(CollectorConstants.deployMotorConfiguration);
+        collectMotor.getConfigurator().apply(CollectorConstants.collectMotorConfiguration);
+        deployRight.setInverted(true);
+
     }
+
+
 
     public static Collector getInstance() {
         return INSTANCE;
