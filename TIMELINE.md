@@ -9,7 +9,7 @@ setup collector to keep programming basically made variables
 figuring out what variables to use and how to use them
 
 ### What do you plan to do tomorrow?
-actually use those variable/ try to finish at least half of collector
+actually use those variable/ try to finish at least half of collector.
 
 ## Day 2 (11/19)
 
