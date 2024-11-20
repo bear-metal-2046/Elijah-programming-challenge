@@ -142,7 +142,7 @@ public class Collector extends SubsystemIF {
     public void collectorEject() {
         setRollerVelocity(CollectorConstants.); // add collector velocity when ejecting
 
-        collectionState = CollectionState.EJECTING;
+        collectionState = CollectionState.EJECTING;;
     }
 
     public void deployDeploy() {
