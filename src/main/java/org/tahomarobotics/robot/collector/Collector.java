@@ -63,7 +63,18 @@ public class Collector extends SubsystemIF {
 
     }
 
+public boolean isDisabled(){
+        return collectionState.equals(CollectionState.DISABLED);
 
+}
+
+public  boolean isEjected(){
+        return  collectionState.equals(CollectionState.EJECTING);
+}
+
+    public boolean isCollected() {
+        return collectionState.equals(CollectionState.COLLECTING);
+    }
 
     public static Collector getInstance() {
         return INSTANCE;
@@ -98,7 +109,6 @@ public class Collector extends SubsystemIF {
 
     // STATE MACHINE
 
-// fix periodic holy what am I doing
     public void periodic() {
 
         switch (deployState) {
@@ -116,7 +126,7 @@ public class Collector extends SubsystemIF {
                 if (shouldDeploy)
                     deployDeploy();
                 if (shouldEject)
-                    deployEject();
+                    deployStow();
             }
 
             case ZEROING -> {
@@ -141,7 +151,7 @@ public class Collector extends SubsystemIF {
     }
 
     public void collectorCollect() {
-        setRollerVelocity(CollectorConstants.); //add collector velocity when collecting
+        setRollerVelocity(COLLECT_MAX_RPS);
 
         collectionState = CollectionState.COLLECTING;
     }
@@ -159,13 +169,12 @@ public class Collector extends SubsystemIF {
     }
 
     public void deployDeploy() {
-        setDeployPosition(CollectorConstants.); // add position collector should be when deploying
-
+        setDeployPosition(COLLECT_POSITION);
         deployState = DeploymentState.DEPLOYED;
     }
 
     public void deployEject() {
-        setDeployPosition(EJECT_POSITION); // not too sure if this is ejecting position just check in case
+        setDeployPosition(EJECT_POSITION);
 
         deployState = DeploymentState.EJECT;
     }

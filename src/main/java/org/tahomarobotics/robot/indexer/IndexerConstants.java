@@ -11,6 +11,9 @@ public class IndexerConstants {
     private static final double INTAKE_ACCEL = INTAKE_RPS / 0.25;
     private static final double INTAKE_JERK = INTAKE_RPS / 0.125;
 
+    static final double EJECT_RPS = -INTAKE_RPS;
+
+
     private static final double INDEXER_GEAR_REDUCTION = 18d / 30d;
 
     static final TalonFXConfiguration indexMotorConfiguration = new TalonFXConfiguration()
