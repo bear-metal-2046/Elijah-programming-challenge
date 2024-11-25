@@ -4,6 +4,7 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.tahomarobotics.robot.RobotMap;
 import org.tahomarobotics.robot.util.SubsystemIF;
 
@@ -31,9 +32,18 @@ public class Collector extends SubsystemIF {
 
 
     // STATUS SIGNALS
-    private final DeploymentState deployStateStowed = DeploymentState.STOWED;
-    private final DeploymentState deployStateDeployed = DeploymentState.DEPLOYED;
-    private final CollectionState collectState = CollectionState.COLLECTING;
+    private double leftMotorPosition, rightMotorPosition, collectorVelocity;
+
+    private void collectorStatusSignals() {
+        leftMotorPosition = deployLeft.getPosition().getValueAsDouble();
+        rightMotorPosition = deployRight.getPosition().getValueAsDouble();
+        collectorVelocity = collectMotor.getVelocity().getValueAsDouble();
+        SmartDashboard.putNumber("Left Deploy Position: ", leftMotorPosition);
+        SmartDashboard.putNumber("Right Deploy Position: ", rightMotorPosition);
+        SmartDashboard.putNumber("Collector Velocity: ", collectorVelocity);
+        SmartDashboard.putBoolean("Is Collector Collecting? ", isCollected());
+        SmartDashboard.putBoolean("Is Collector Deployed? ", isDisabled());
+    }
 
     // STATE
     private CollectionState collectionState = CollectionState.DISABLED;
@@ -72,7 +82,7 @@ public  boolean isEjected(){
         return  collectionState.equals(CollectionState.EJECTING);
 }
 
-    public boolean isCollected() {
+public boolean isCollected() {
         return collectionState.equals(CollectionState.COLLECTING);
     }
 
@@ -108,8 +118,9 @@ public  boolean isEjected(){
 
 
     // STATE MACHINE
-
+@Override
     public void periodic() {
+        collectorStatusSignals();
 
         switch (deployState) {
             case DEPLOYED -> {
@@ -128,10 +139,9 @@ public  boolean isEjected(){
                 if (shouldEject)
                     deployStow();
             }
-
             case ZEROING -> {
-
             }
+
         }
 
         switch (collectionState){
@@ -155,6 +165,12 @@ public  boolean isEjected(){
 
         collectionState = CollectionState.COLLECTING;
     }
+    /*
+    if (newState = COLLECTING) {
+    collect();
+    state = COLLECTING;
+    else if (...)
+     */
 
     public void collectorDisabled() {
         collectMotor.stopMotor();
@@ -169,7 +185,7 @@ public  boolean isEjected(){
     }
 
     public void deployDeploy() {
-        setDeployPosition(COLLECT_POSITION);
+        setDeployPosition(DEPLOY_POSITION);
         deployState = DeploymentState.DEPLOYED;
     }
 

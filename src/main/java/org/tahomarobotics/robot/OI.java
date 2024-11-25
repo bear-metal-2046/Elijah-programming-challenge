@@ -20,7 +20,7 @@ public class OI extends SubsystemIF {
     }
 
     private final CommandXboxController driveController = new CommandXboxController(0);
-    private final CommandXboxController manippController = new CommandXboxController(1);
+    private final CommandXboxController manipController = new CommandXboxController(1);
 
     private OI() {
         CommandScheduler.getInstance().unregisterSubsystem(this);
@@ -28,13 +28,13 @@ public class OI extends SubsystemIF {
         Collector collector = Collector.getInstance();
         Indexer indexer = Indexer.getInstance();
 
-        driveController.povLeft().onTrue(Commands.runOnce(() -> collector.shouldEject(true)))
-                .onFalse(Commands.runOnce(() -> collector.shouldEject(false)));
 
-        driveController.leftTrigger().onTrue(Commands.run(() -> collector.shouldCollect(true)))
-                .onFalse(Commands.runOnce(() -> collector.shouldCollect(false)));
+            driveController.povLeft().onTrue(Commands.runOnce(() -> collector.shouldEject(true)))
+                    .onFalse(Commands.runOnce(() -> collector.shouldEject(false)));
+            driveController.leftTrigger().onTrue(Commands.run(() -> collector.shouldCollect(true)))
+                    .onFalse(Commands.runOnce(() -> collector.shouldCollect(false)));
 
-        driveController.leftBumper().onTrue(Commands.run(collector::switchDeploy));
+            driveController.leftBumper().onTrue(Commands.run(collector::switchDeploy));
 
 
     }

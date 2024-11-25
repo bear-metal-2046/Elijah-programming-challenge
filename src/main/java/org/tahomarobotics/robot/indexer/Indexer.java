@@ -1,5 +1,6 @@
 package org.tahomarobotics.robot.indexer;
 
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -14,20 +15,20 @@ public class Indexer extends SubsystemIF {
 
 
     // MOTORS
-    private final TalonFX motor = new TalonFX(RobotMap.INDEXER_MOTOR);
+    private final TalonFX indexMotor = new TalonFX(RobotMap.INDEXER_MOTOR);
 
     // BEAM BRAKES
     private final DigitalInput collectorBeamBrake = new DigitalInput(RobotMap.BEAM_BREAK_ONE);
     private final DigitalInput shooterBeamBrake = new DigitalInput(RobotMap.BEAM_BREAK_ONE);
 
     // CONTROL REQUESTS
-    private final MotionMagicVoltage indexControl = new MotionMagicVoltage(0);
+    private final MotionMagicVelocityVoltage indexControl = new MotionMagicVelocityVoltage(0);
 
     // STATUS SIGNALS
     private double motorSpeed;
 
     private void indexerStatusSignals() {
-        motorSpeed = motor.getVelocity().getValueAsDouble();
+        motorSpeed = indexMotor.getVelocity().getValueAsDouble();
         SmartDashboard.putNumber("Indexer Velocity: ", motorSpeed);
         SmartDashboard.putBoolean("Shooter Beam Broke?", shooterBeamBroke());
         SmartDashboard.putBoolean("Collector Beam Broke?", collectorBeamBrake());
@@ -37,6 +38,7 @@ public class Indexer extends SubsystemIF {
     private State state = State.DISABLED;
 
     private Indexer() {
+        indexMotor.getConfigurator().apply(IndexerConstants.indexMotorConfiguration);
 
     }
 
@@ -74,16 +76,16 @@ public class Indexer extends SubsystemIF {
     // SETTERS
 
     private void disable(){
-        motor.stopMotor();
+        indexMotor.stopMotor();
     }
 
     private void intake(){
         deployIntake();
-        motor.setControl(indexControl.withPosition(IndexerConstants.INTAKE_RPS)); //change to with velocity
+        indexMotor.setControl(indexControl.withVelocity(IndexerConstants.INTAKE_RPS)); //change to with velocity
     }
 
     private void index(){
-        motor.setControl(indexControl.withPosition(IndexerConstants.INDEX_RPS));
+        indexMotor.setControl(indexControl.withVelocity(IndexerConstants.INDEX_RPS));
         if(shooterBeamBroke()){
             disable();
             deployCollect();
@@ -91,7 +93,7 @@ public class Indexer extends SubsystemIF {
     }
 
     private void eject(){
-        motor.setControl(indexControl.withPosition(IndexerConstants.EJECT_RPS));
+        indexMotor.setControl(indexControl.withVelocity(IndexerConstants.EJECT_RPS));
     }
 
     // STATE MACHINE

@@ -10,7 +10,8 @@ public class CollectorConstants {
     public final static double STOW_POSITION = Units.degreesToRotations(82),
             COLLECT_POSITION = Units.degreesToRotations(182.5),
             EJECT_POSITION = Units.degreesToRotations(147),
-            ZERO_POSITION = Units.degreesToRotations(63.5);
+            ZERO_POSITION = Units.degreesToRotations(63.5),
+            DEPLOY_POSITION = Units.degreesToRotations(125);
 
     private final static double DEPLOY_GEAR_REDUCTION = (10d / 72d) * (16d / 36d);
     private final static double COLLECT_GEAR_REDUCTION = (18d / 36d);

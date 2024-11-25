@@ -2,11 +2,11 @@ package org.tahomarobotics.robot.collector;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class CollectorZeroingCommand extends Command {
+public class CollectorZeroCommand extends Command {
 
     private final Collector collector = Collector.getInstance();
 
-    public CollectorZeroingCommand() {
+    public CollectorZeroCommand() {
         addRequirements(collector);
     }
 
