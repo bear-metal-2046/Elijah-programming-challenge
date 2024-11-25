@@ -27,9 +27,6 @@ public class Collector extends SubsystemIF {
     private final StatusSignal<Double> deployVelocity;
     private final StatusSignal<Double> collectVelocity;
 
-    double piviotLeftVelocity = INSTANCE.getLeftPiviotVelocity();
-    double piviotRightVelocity = INSTANCE.getRightPiviotVelocity();
-
 
     // STATUS SIGNALS
     private double leftMotorPosition, rightMotorPosition, collectorVelocity;
