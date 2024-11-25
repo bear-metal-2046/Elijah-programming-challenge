@@ -20,7 +20,7 @@ public class OI extends SubsystemIF {
     }
 
     private final CommandXboxController driveController = new CommandXboxController(0);
-    private final CommandXboxController manipController = new CommandXboxController(1);
+    private final CommandXboxController manippController = new CommandXboxController(1);
 
     private OI() {
         CommandScheduler.getInstance().unregisterSubsystem(this);
