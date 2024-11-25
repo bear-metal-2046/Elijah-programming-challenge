@@ -43,6 +43,8 @@ public class Collector extends SubsystemIF {
     boolean shouldDeploy = false;
     boolean shouldEject = false;
     boolean shouldStow = false;
+    boolean shouldCollect = false;
+
 
 
 
@@ -101,29 +103,40 @@ public class Collector extends SubsystemIF {
 
         switch (deployState) {
             case DEPLOYED -> {
-                if (shouldDeploy) deployDeploy();
-                if (shouldEject) deployEject();
+                if (!shouldDeploy)
+                    deployStow();
+                if (shouldEject)
+                    deployEject();
             }
             case EJECT -> {
-                if (shouldStow) deployStow();
+                if (shouldEject)
+                    deployUneject();
             }
             case STOWED -> {
-                if(shouldDeploy) deployDeploy();
+                if (shouldDeploy)
+                    deployDeploy();
+                if (shouldEject)
+                    deployEject();
+            }
+
+            case ZEROING -> {
+
             }
         }
 
         switch (collectionState){
             case COLLECTING -> {
-                if (shouldDeploy) collectorCollect();
+                if (!shouldCollect) collectorDisabled();
+                if (shouldEject) collectorEject();
 
             }
             case DISABLED -> {
-                if (shouldStow) collectorDisabled();
+                if (shouldCollect) collectorCollect();
+                if (shouldEject) collectorEject();
 
             }
             case EJECTING -> {
-                if(shouldEject) collectorEject();
-            }
+                if (!shouldEject) collectorDisabled();            }
         }
     }
 
@@ -140,9 +153,9 @@ public class Collector extends SubsystemIF {
     }
 
     public void collectorEject() {
-        setRollerVelocity(CollectorConstants.); // add collector velocity when ejecting
+        setRollerVelocity(COLLECT_POSITION);
 
-        collectionState = CollectionState.EJECTING;;
+        collectionState = CollectionState.EJECTING;
     }
 
     public void deployDeploy() {
@@ -163,6 +176,32 @@ public class Collector extends SubsystemIF {
         deployState = DeploymentState.STOWED;
     }
 
+    public double zeroDeploy(){
+
+        deployLeft.setPosition(ZERO_POSITION);
+        deployRight.setPosition(ZERO_POSITION);
+        return 0;
+    }
+    private void deployUneject() {
+        switch (deployState) {
+            case DEPLOYED -> deployDeploy();
+            case STOWED -> deployStow();
+            default -> {}
+        }
+    }
+
+    public void shouldEject(boolean check) {
+        shouldEject = check;
+    }
+
+    public void shouldCollect(boolean check) {
+        shouldCollect = check;
+    }
+
+    public void switchDeploy() {
+        shouldDeploy = !shouldDeploy;
+    }
+
     // STATES
 
     public enum CollectionState {
@@ -174,6 +213,7 @@ public class Collector extends SubsystemIF {
     public enum DeploymentState {
         DEPLOYED,
         STOWED,
-        EJECT
+        EJECT,
+        ZEROING
     }
 }

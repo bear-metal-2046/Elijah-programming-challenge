@@ -6,6 +6,7 @@
 package org.tahomarobotics.robot;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.tahomarobotics.robot.collector.Collector;
 import org.tahomarobotics.robot.indexer.Indexer;
@@ -22,18 +23,22 @@ public class OI extends SubsystemIF {
     private final CommandXboxController manipController = new CommandXboxController(1);
 
     private OI() {
-        // Disable OI periodic unless its being used.
         CommandScheduler.getInstance().unregisterSubsystem(this);
 
-        configureBindings();
-    }
-
-    /**
-     * Configure the button bindings for the controller(s).
-     */
-    private void configureBindings() {
         Collector collector = Collector.getInstance();
         Indexer indexer = Indexer.getInstance();
 
+        driveController.povLeft().onTrue(Commands.runOnce(() -> collector.shouldEject(true)))
+                .onFalse(Commands.runOnce(() -> collector.shouldEject(false)));
+
+        driveController.leftTrigger().onTrue(Commands.run(() -> collector.shouldCollect(true)))
+                .onFalse(Commands.runOnce(() -> collector.shouldCollect(false)));
+
+        driveController.leftBumper().onTrue(Commands.run(collector::switchDeploy));
+
+
     }
+
+
+
 }
