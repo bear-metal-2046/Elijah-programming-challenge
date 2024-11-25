@@ -3,12 +3,15 @@ package org.tahomarobotics.robot.indexer;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.tahomarobotics.robot.RobotMap;
 import org.tahomarobotics.robot.collector.Collector;
 import org.tahomarobotics.robot.util.SubsystemIF;
 
 public class Indexer extends SubsystemIF {
     private static final Indexer INSTANCE = new Indexer();
+    Collector collector = Collector.getInstance();
+
 
     // MOTORS
     private final TalonFX motor = new TalonFX(RobotMap.INDEXER_MOTOR);
@@ -23,9 +26,11 @@ public class Indexer extends SubsystemIF {
     // STATUS SIGNALS
     private double motorSpeed;
 
-    private void StatusSignals(){
-
-
+    private void indexerStatusSignals() {
+        motorSpeed = motor.getVelocity().getValueAsDouble();
+        SmartDashboard.putNumber("Indexer Velocity: ", motorSpeed);
+        SmartDashboard.putBoolean("Shooter Beam Broke?", shooterBeamBroke());
+        SmartDashboard.putBoolean("Collector Beam Broke?", collectorBeamBrake());
     }
 
     // STATE Transitions
@@ -63,7 +68,7 @@ public class Indexer extends SubsystemIF {
     }
 
     private boolean collectorBeamBrake(){
-        return collectorBeamBrake.get();
+        return !(collectorBeamBrake.get());
     }
 
     // SETTERS
@@ -73,6 +78,7 @@ public class Indexer extends SubsystemIF {
     }
 
     private void intake(){
+        deployIntake();
         motor.setControl(indexControl.withPosition(IndexerConstants.INTAKE_RPS)); //change to with velocity
     }
 
@@ -89,36 +95,38 @@ public class Indexer extends SubsystemIF {
     }
 
     // STATE MACHINE
-    Collector collector = Collector.getInstance();
-
+    @Override
     public void periodic(){
+        indexerStatusSignals();
+
         switch(state){
             case DISABLED -> {
-            disable();
-            if (collector.isCollected(); deployCollect();
-            if (collector.isCollected(); deployEject();
+                disable();
+                if(collector.isCollected()) deployIntake();
+                if(collector.isDisabled()) deployEject();
         }
-
             case INTAKING -> {
                 intake();
-                if (collector.isEjected()) deployEject();
-                if (collector.isDisabled()) deployDisabled();
+                if(collector.isEjected()) deployEject();
+                if(collector.isDisabled()) deployDisabled();
                 if(collectorBeamBrake()) deployIndexing();
             }
 
             case INDEXING -> {
                 index();
                 if(collector.isEjected()) deployEject();
+
+
             }
 
             case COLLECTED -> {
                 disable();
                 if(collector.isEjected()) deployEject();
+
             }
             case EJECTING -> {
                 eject();
-                if(collector.isDisabled()) deployEject();
-
+                if(collector.isDisabled()) deployDisabled();
 
             }
         }
