@@ -11,7 +11,7 @@ public class CollectorConstants {
             COLLECT_POSITION = Units.degreesToRotations(182.5),
             EJECT_POSITION = Units.degreesToRotations(147),
             ZERO_POSITION = Units.degreesToRotations(63.5),
-            DEPLOY_POSITION = Units.degreesToRotations(125);
+            DEPLOY_POSITION = Units.degreesToRotations(170);
 
     private final static double DEPLOY_GEAR_REDUCTION = (10d / 72d) * (16d / 36d);
     private final static double COLLECT_GEAR_REDUCTION = (18d / 36d);
@@ -27,8 +27,8 @@ public class CollectorConstants {
     private final static double SUPPLY_CURRENT_LIMIT = 40;
     private final static double STATOR_CURRENT_LIMIT = 80;
 
-    public final static double COLLECTOR_ZERO_VOLATAGE = -2;
-    public final static double COLLECTOR_ZERO_VELOCITY_TOLERANCE  = 0.05;
+    public final static double COLLECTOR_ZERO_VOLATAGE = 0.5;
+    public final static double COLLECTOR_ZERO_VELOCITY_TOLERANCE  = 0.1;
 
 
 
