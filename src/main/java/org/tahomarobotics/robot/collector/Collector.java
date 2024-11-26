@@ -7,6 +7,7 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.tahomarobotics.robot.RobotMap;
+import org.tahomarobotics.robot.util.RobustConfigurator;
 import org.tahomarobotics.robot.util.SubsystemIF;
 
 import static org.tahomarobotics.robot.collector.CollectorConstants.*;
@@ -53,16 +54,15 @@ public class Collector extends SubsystemIF {
     boolean shouldStow = false;
     boolean shouldCollect = false;
 
+   private  RobustConfigurator robustConfig = new RobustConfigurator(logger);
 
 
 
 
     private Collector() {
 
-        deployLeft.getConfigurator().apply(deployMotorConfiguration);
-        deployRight.getConfigurator().apply(deployMotorConfiguration);
         collectMotor.getConfigurator().apply(collectMotorConfiguration);
-        deployRight.setControl(new Follower(RobotMap.DEPLOY_MOTOR_LEFT, true));
+        robustConfig.configureTalonFX(deployLeft, deployMotorConfiguration, deployRight, true);
 
         deployPositionLeft = deployLeft.getPosition();
         deployPositionRight = deployRight.getPosition();
