@@ -58,11 +58,12 @@ public class Collector extends SubsystemIF {
 
     private Collector() {
 
-        collectMotor.getConfigurator().apply(collectMotorConfiguration);
-        robustConfig.configureTalonFX(deployLeft, deployMotorConfiguration, deployRight, true);
+
 
         deployPositionLeft = deployLeft.getPosition();
         deployPositionRight = deployRight.getPosition();
+        deployRight.setControl(new Follower(deployLeft.getDeviceID(), true));
+
         deployVelocity = deployRight.getVelocity();
         collectVelocity = collectMotor.getVelocity();
 
