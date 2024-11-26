@@ -56,9 +56,6 @@ public class Collector extends SubsystemIF {
 
    private  RobustConfigurator robustConfig = new RobustConfigurator(logger);
 
-
-
-
     private Collector() {
 
         collectMotor.getConfigurator().apply(collectMotorConfiguration);
@@ -102,7 +99,6 @@ public boolean isCollected() {
     // SETTERS
     private void setDeployPosition(double position) {
         deployLeft.setControl(deployControl.withPosition(position));
-        deployRight.setControl(deployControl.withPosition(position));
     }
 
     private void setRollerVelocity(double velocity) {
@@ -111,7 +107,6 @@ public boolean isCollected() {
 
     public void setDeployVoltage(double voltage){
         deployLeft.setVoltage(voltage);
-        deployRight.setVoltage(voltage);
     }
 
 
@@ -135,7 +130,7 @@ public boolean isCollected() {
                 if (shouldDeploy)
                     deployDeploy();
                 if (shouldEject)
-                    deployStow();
+                    deployEject();
             }
             case ZEROING -> {
             }
@@ -202,7 +197,6 @@ public boolean isCollected() {
     public double zeroDeploy(){
 
         deployLeft.setPosition(ZERO_POSITION);
-        deployRight.setPosition(ZERO_POSITION);
         return 0;
     }
     private void deployUneject() {
