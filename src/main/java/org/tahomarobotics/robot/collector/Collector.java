@@ -1,6 +1,7 @@
 package org.tahomarobotics.robot.collector;
 
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -61,7 +62,7 @@ public class Collector extends SubsystemIF {
         deployLeft.getConfigurator().apply(deployMotorConfiguration);
         deployRight.getConfigurator().apply(deployMotorConfiguration);
         collectMotor.getConfigurator().apply(collectMotorConfiguration);
-        deployRight.setInverted(true);
+        deployRight.setControl(new Follower(RobotMap.DEPLOY_MOTOR_LEFT, true));
 
         deployPositionLeft = deployLeft.getPosition();
         deployPositionRight = deployRight.getPosition();
