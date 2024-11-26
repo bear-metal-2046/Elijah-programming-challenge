@@ -28,7 +28,7 @@ public class CollectorConstants {
     private final static double STATOR_CURRENT_LIMIT = 80;
 
     public final static double COLLECTOR_ZERO_VOLATAGE = 0.5;
-    public final static double COLLECTOR_ZERO_VELOCITY_TOLERANCE  = ;
+    public final static double COLLECTOR_ZERO_VELOCITY_TOLERANCE  =0.1 ;
 
 
 
