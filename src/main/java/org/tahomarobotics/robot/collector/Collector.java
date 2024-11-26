@@ -65,7 +65,7 @@ public class Collector extends SubsystemIF {
         deployRight.setControl(new Follower(deployLeft.getDeviceID(), true));
 
         deployVelocity = deployRight.getVelocity();
-        collectVelocity = collectMotor.getVelocity();
+        collectVelocity = collectMotor.getVelocity();;
 
     }
 
